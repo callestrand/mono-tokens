@@ -26,6 +26,44 @@ export const OVERLAY = {
   scrimHero:    "linear-gradient(to top,rgba(0,0,0,.6) 0%,rgba(0,0,0,.05) 60%,transparent 100%)", // hero video scrim
 }
 
+// Status colours — the only hues outside the monochrome + midori palette above.
+// A single-accent palette cannot make six states tellable apart at a glance, which
+// is what Vandelay's status dots and pills have to do, so these exist as a separate
+// axis rather than being forced onto C.
+//
+// Named by the role a state plays, never by the status that currently wears it: the
+// same colour serves more than one status in more than one map (idle is both
+// Playmaker "not sent" and an alteration "pending"), and the mapping itself belongs
+// to the consumer — STATUS_DOT, PLAYMAKER_STATUSES and ALTERATION_STATUSES in
+// Vandelay's lib/utils.js. That file sits below ds.js in the import graph and so
+// cannot reach ds.js's semantic colours; it reads this package directly instead.
+//
+// Not mirrored as --sm-* custom properties: every consumer is a JS inline style,
+// same as OVERLAY above.
+export const STATUS = {
+  empty:       "#CCCCCC", // no state recorded yet
+  idle:        "#AAAAAA", // awaiting an action that has not started
+  provisional: "#C8A96E", // early, not yet committed to
+  attention:   "#7B5EA7", // active and needing someone to act
+  resolved:    "#3D463F", // handed off — sumi's cooler sibling
+  archived:    "#C8C4BC", // closed out, deliberately low-contrast
+}
+
+// Functional colours — meaning-bearing, and deliberately not part of the brand
+// palette: a suit brand's palette should not have to own "this went wrong". They
+// live here rather than in a consumer for the same reason STATUS does — Vandelay's
+// lib/utils.js needs them and cannot import its own ds.js, which is where all three
+// used to live and where they are still re-exported under their existing names.
+//
+// `muted` doubles as a status colour (Vandelay's STATUS_DOT "In Studio") but is not
+// in STATUS above, because it also marks non-status things — the manual-trigger dots
+// in Settings' audit log — and would be the only entry there serving both.
+export const FUNCTIONAL = {
+  danger:  "#c0392b",  // error, overdue, destructive
+  warning: "#B07D3A",  // caution, in-progress, genuine warnings only
+  muted:   "#9C9890",  // muted neutral
+}
+
 // Font weights — single source for the numeric weights mirrored by the --fw-* CSS
 // custom properties below. JS consumers (inline styles) read FW.*; CSS reads var(--fw-*).
 export const FW = {
