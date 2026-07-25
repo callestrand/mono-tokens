@@ -20,7 +20,7 @@ export const C = {
 export const OVERLAY = {
   hoverDark:    "rgba(0,0,0,0.05)",     // transparent button on a light surface, hover
   hoverLight:   "rgba(255,255,255,0.1)",// transparent button on video/dark, hover
-  solidHover:   "rgba(0,0,0,0.80)",     // solid (primary) button background, hover
+  solidHover:   "rgba(72,81,74,0.85)",  // filled (primary) button background, hover — slate at 85%
   textOnVideo:  "rgba(255,255,255,0.82)",// caption/body text over video or imagery (--c-on-video)
   borderOnDark: "rgba(255,255,255,0.1)",// hairline divider on dark surfaces (footer)
   scrimHero:    "linear-gradient(to top,rgba(0,0,0,.6) 0%,rgba(0,0,0,.05) 60%,transparent 100%)", // hero video scrim
@@ -258,6 +258,80 @@ export const MOTION = {
   slow:    "400ms ease",
   spring:  "300ms cubic-bezier(0.34, 1.56, 0.64, 1)",
   easeOut: "cubic-bezier(.25,.46,.45,.94)",
+}
+
+// ─── Buttons ──────────────────────────────────────────────────────────────────
+// Every button in the brand resolves its styling from here: Vandelay's Btn and
+// PortalBtn, the marketing site's Btn, and the landing splash. Each app used to
+// carry its own copy and they drifted — the website's filled button was sumi
+// while Vandelay's was slate, padding differed by 2px, hover ran at .25s against
+// Vandelay's 150ms, and the website never grew to the mobile tap target.
+//
+// The filled variant is `black` by name and slate by value. Sumi is reserved for
+// text and dark surfaces; a sumi fill reads as a dark surface rather than as a
+// control, which is why Vandelay moved its buttons onto slate.
+export const BTN = {
+  radius:       RADIUS.sm, // 2px — same as every other control
+  height:       36,        // compact (`small`) desktop height, = form-control height
+  heightMobile: 44,        // minimum comfortable tap target
+  pad: {
+    small:   "0 12px",     // paired with `height`, so it sits level beside an input
+    regular: "12px 32px",
+    large:   "11px 32px",  // marketing hero/video CTAs — bodyS type, not caps
+  },
+  transition:      "background 150ms ease, transform 150ms ease",
+  hoverScale:      "scale(1.02)",
+  restScale:       "scale(1)",
+  disabledOpacity: 0.5,
+}
+
+// Variant colour sets. Consumers read `.hover` themselves to wire mouseenter /
+// mouseleave — btnStyle() returns the rest state only, since a hover written into
+// the style object would need a re-render to leave.
+//
+// Functional variants (destructive, and the portal's ghost) are app-local: they
+// extend this table rather than living in it, because the danger colour is not
+// part of the brand palette.
+export const BTN_VARIANT = {
+  black:        { bg: C.slate,       hover: OVERLAY.solidHover,  fg: C.white,      border: C.slate      },
+  outlineBlack: { bg: "transparent", hover: OVERLAY.hoverDark,   fg: C.sumi,       border: C.sumi       },
+  outlineWhite: { bg: "transparent", hover: OVERLAY.hoverLight,  fg: C.whitepaper, border: C.whitepaper },
+}
+
+// Rest-state inline styles for a button.
+//
+//   size:  "small" | "regular" | "large"
+//   touch: opt a small button back into the 44px mobile target. Small buttons
+//          otherwise hold 36px on mobile so they sit level beside the inputs and
+//          selects they accompany (those keep 36px at every width) instead of
+//          towering over them. `touch` is for a standalone small action with no
+//          control beside it to match, where the shorter height only makes it
+//          harder to hit.
+//
+// Pass `variants` to extend BTN_VARIANT with app-local entries.
+export function btnStyle({
+  variant = "black", size = "regular", disabled = false, isMobile = false,
+  touch = false, variants = BTN_VARIANT,
+} = {}) {
+  const v = variants[variant] || variants.black || BTN_VARIANT.black
+  const compact = size === "small"
+  const height = compact
+    ? (isMobile && touch ? BTN.heightMobile : BTN.height)
+    : (isMobile ? BTN.heightMobile : undefined)
+  return {
+    ...ty(size === "large" ? "bodyS" : "button", { color: v.fg }),
+    background: v.bg,
+    border: `1px solid ${v.border}`,
+    borderRadius: BTN.radius,
+    padding: BTN.pad[size] || BTN.pad.regular,
+    display: "inline-flex", alignItems: "center", justifyContent: "center",
+    height, minHeight: height,
+    cursor: disabled ? "not-allowed" : "pointer",
+    opacity: disabled ? BTN.disabledOpacity : 1,
+    whiteSpace: "nowrap", boxSizing: "border-box", flexShrink: 0,
+    textDecoration: "none", // the marketing site renders link buttons as <a>
+    transition: BTN.transition,
+  }
 }
 
 export const typographyCSS = `
