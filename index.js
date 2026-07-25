@@ -119,6 +119,7 @@ export const SCALE = {
     bodyxs:    [13, 12, 12],
     link:      [15, 14, 14],
     caps:      [12, 11, 11],
+    capsxs:    [10, 9, 9],
     button:    [11, 10, 10],
     navbar:    [16, 14, 14],
     navlabel:  [14, 14, 14],
@@ -158,6 +159,12 @@ export const TY = {
   headingS:  { font: F.sans,  size: "var(--fs-headings)", weight: "400", ls: "var(--ls-subheading)", lh: "var(--lh-snug)"     },
   headingXS: { font: F.sans,  size: "var(--fs-headingxs)", weight: "400", ls: "var(--ls-subheading)", lh: "var(--lh-snug)"     },
   caps:      { font: F.mono,  size: "var(--fs-caps)",     weight: "300", ls: "var(--ls-caps)",       lh: "var(--lh-body)",    up: true },
+  // One step under caps, for labels inside dense chrome — calendar weekday headers,
+  // timeline stops, status badges — where caps is too loud for the space it gets.
+  // Vandelay is the only consumer today; the marketing site has no surface this dense.
+  // It exists because those labels were being forced to 9/10px with a fontSize
+  // override on top of caps, at 16 call sites, which put them outside the scale.
+  capsXS:    { font: F.mono,  size: "var(--fs-capsxs)",   weight: "300", ls: "var(--ls-caps)",       lh: "var(--lh-body)",    up: true },
   navLabel:  { font: F.body,  size: "var(--fs-navlabel)", weight: "300", ls: "0",                     lh: "var(--lh-body)",    up: true },
   button:    { font: F.mono,  size: "var(--fs-button)",   weight: "300", ls: "var(--ls-caps)",       lh: "var(--lh-body)",    up: true },
   navbar:    { font: F.body,  size: "var(--fs-navbar)",   weight: "300", ls: "0",                     lh: "var(--lh-body)"     },
