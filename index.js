@@ -32,16 +32,22 @@ export const OVERLAY = {
 // axis rather than being forced onto C.
 //
 // Named by the role a state plays, never by the status that currently wears it: the
-// same colour serves more than one status in more than one map (idle is both
-// Playmaker "not sent" and an alteration "pending"), and the mapping itself belongs
-// to the consumer — STATUS_DOT, PLAYMAKER_STATUSES and ALTERATION_STATUSES in
+// same colour serves more than one status in more than one map (attention is both an
+// order at the "Fitting" stage and a fitting outcome of "needs alteration"), and the
+// mapping itself belongs to the consumer — STATUS_DOT and PLAYMAKER_STATUSES in
 // Vandelay's lib/utils.js. That file sits below ds.js in the import graph and so
 // cannot reach ds.js's semantic colours; it reads this package directly instead.
+//
+// Naming by role is also what lets a consumer retire a whole map without this file
+// moving: Vandelay dropped ALTERATION_STATUSES in 2026-07 and nothing here needed
+// renaming or repointing — only `empty` lost its last reader. It stays anyway. A
+// token package that deletes entries as consumers churn is one no consumer can
+// safely pin to.
 //
 // Not mirrored as --sm-* custom properties: every consumer is a JS inline style,
 // same as OVERLAY above.
 export const STATUS = {
-  empty:       "#CCCCCC", // no state recorded yet
+  empty:       "#CCCCCC", // no state recorded yet — currently unclaimed, see above
   idle:        "#AAAAAA", // awaiting an action that has not started
   provisional: "#C8A96E", // early, not yet committed to
   attention:   "#7B5EA7", // active and needing someone to act
